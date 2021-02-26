@@ -3,16 +3,57 @@ extern crate glium;
 
 extern crate image;
 
+mod shader;
+mod color;
+mod matrix;
+mod vector;
+
+use crate::vector::Vec3;
+use crate::shader::ShaderBuilder;
+use crate::matrix::Matrix;
+
 use std::io::Cursor;
+
+fn get_display<T>(event_loop: &glium::glutin::event_loop::EventLoop<T>) -> glium::Display {
+    let image = image::load(Cursor::new(
+        &include_bytes!("../assets/icon.png")[..]),
+        image::ImageFormat::Png)
+            .unwrap()
+            .to_rgba8()
+            .to_vec();
+    
+    let icon = match glutin::window::Icon::from_rgba(image, 43, 40) {
+        Ok(i) => i,
+        Err(e) => match e {
+            glutin::window::BadIcon::ByteCountNotDivisibleBy4 { .. } => panic!("Failed to get a decent bytecount"),
+            glutin::window::BadIcon::DimensionsVsPixelCount { width, height, width_x_height, pixel_count } => panic!("({}, {}) {} = {}", width, height, width_x_height, pixel_count),
+            glutin::window::BadIcon::OsError(err) => panic!("{}", err)
+
+        }
+    };
+
+    let wb = glutin::window::WindowBuilder::new()
+        .with_inner_size(glium::glutin::dpi::LogicalSize::new(1024, 768))
+        .with_resizable(true)
+        .with_title("Mythica Engine")
+        .with_decorations(true)
+        .with_window_icon(Some(icon));
+
+    let cb = glutin::ContextBuilder::new()
+        .with_depth_buffer(24)
+        .with_gl(glutin::GlRequest::Latest)
+        .with_vsync(true)
+        .with_hardware_acceleration(Some(true));
+
+    glium::Display::new(wb, cb, &event_loop).unwrap()
+}
 
 fn main() {
     #[allow(unused_imports)]
     use glium::{glutin, Surface};
 
     let event_loop = glutin::event_loop::EventLoop::new();
-    let wb = glutin::window::WindowBuilder::new();
-    let cb = glutin::ContextBuilder::new().with_depth_buffer(24);
-    let display = glium::Display::new(wb, cb, &event_loop).unwrap();
+    let display = get_display(&event_loop);
 
     #[derive(Copy, Clone)]
     struct Vertex {
@@ -100,8 +141,11 @@ fn main() {
         }
     "#;
 
-    let program = glium::Program::from_source(&display, vertex_shader_src, fragment_shader_src,
-                                              None).unwrap();
+    let program = ShaderBuilder::new()
+        .with_vertex_shader(vertex_shader_src)
+        .with_fragment_shader(fragment_shader_src)
+        .build(&display);
+        
 
     event_loop.run(move |event, _, control_flow| {
         let next_frame_time = std::time::Instant::now() +
@@ -125,16 +169,15 @@ fn main() {
         }
 
         let mut target = display.draw();
-        target.clear_color_and_depth((0.0, 0.0, 1.0, 1.0), 1.0);
+        target.clear_color_and_depth(color::CORNFLOWER_BLUE, 1.0);
 
-        let model = [
-            [1.0, 0.0, 0.0, 0.0],
-            [0.0, 1.0, 0.0, 0.0],
-            [0.0, 0.0, 1.0, 0.0],
-            [0.0, 0.0, 0.0, 1.0f32]
-        ];
+        let model = Matrix::identity();
 
-        let view = view_matrix(&[0.5, 0.2, -3.0], &[-0.5, -0.2, 3.0], &[0.0, 1.0, 0.0]);
+        let pos = Vec3::new_with(0.5f32, 0.2f32, -3f32);
+        let direction = Vec3::new_with(-0.5f32, -0.2f32, 3f32);
+        let up = Vec3::up();
+
+        let view = Matrix::view_matrix(&pos, &direction, &up);
 
         let perspective = {
             let (width, height) = target.get_dimensions();
@@ -166,44 +209,9 @@ fn main() {
         };
 
         target.draw(&shape, glium::index::NoIndices(glium::index::PrimitiveType::TriangleStrip), &program,
-                    &uniform! { model: model, view: view, perspective: perspective,
+                    &uniform! { model: model.to_arr(), view: view.to_arr(), perspective: perspective,
                                 u_light: light, diffuse_tex: &diffuse_texture, normal_tex: &normal_map },
                     &params).unwrap();
         target.finish().unwrap();
     });
-}
-
-
-fn view_matrix(position: &[f32; 3], direction: &[f32; 3], up: &[f32; 3]) -> [[f32; 4]; 4] {
-    let f = {
-        let f = direction;
-        let len = f[0] * f[0] + f[1] * f[1] + f[2] * f[2];
-        let len = len.sqrt();
-        [f[0] / len, f[1] / len, f[2] / len]
-    };
-
-    let s = [up[1] * f[2] - up[2] * f[1],
-             up[2] * f[0] - up[0] * f[2],
-             up[0] * f[1] - up[1] * f[0]];
-
-    let s_norm = {
-        let len = s[0] * s[0] + s[1] * s[1] + s[2] * s[2];
-        let len = len.sqrt();
-        [s[0] / len, s[1] / len, s[2] / len]
-    };
-
-    let u = [f[1] * s_norm[2] - f[2] * s_norm[1],
-             f[2] * s_norm[0] - f[0] * s_norm[2],
-             f[0] * s_norm[1] - f[1] * s_norm[0]];
-
-    let p = [-position[0] * s_norm[0] - position[1] * s_norm[1] - position[2] * s_norm[2],
-             -position[0] * u[0] - position[1] * u[1] - position[2] * u[2],
-             -position[0] * f[0] - position[1] * f[1] - position[2] * f[2]];
-
-    [
-        [s_norm[0], u[0], f[0], 0.0],
-        [s_norm[1], u[1], f[1], 0.0],
-        [s_norm[2], u[2], f[2], 0.0],
-        [p[0], p[1], p[2], 1.0],
-    ]
 }
