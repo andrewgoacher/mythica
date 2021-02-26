@@ -7,6 +7,7 @@ pub struct Vec2 {
     pub y: f32,
 }
 
+#[allow(dead_code)]
 impl Vec2 {
     pub fn zero() -> Self {
         Self { x: 0f32, y: 0f32 }
