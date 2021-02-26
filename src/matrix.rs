@@ -1,6 +1,5 @@
+use core::f32::consts::PI;
 use crate::vector::Vec3;
-
-pub const PI: f32 = 3.141592;
 
 pub struct ProjectionOptions {
     width: u32,
