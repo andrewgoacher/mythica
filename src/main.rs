@@ -3,33 +3,42 @@ extern crate glium;
 
 extern crate image;
 
-mod shader;
 mod color;
 mod matrix;
+mod shader;
 mod vector;
 
-use crate::vector::Vec3;
-use crate::shader::ShaderBuilder;
 use crate::matrix::Matrix;
+use crate::shader::ShaderBuilder;
+use crate::vector::{Vec2, Vec3};
 
 use std::io::Cursor;
 
 fn get_display<T>(event_loop: &glium::glutin::event_loop::EventLoop<T>) -> glium::Display {
-    let image = image::load(Cursor::new(
-        &include_bytes!("../assets/icon.png")[..]),
-        image::ImageFormat::Png)
-            .unwrap()
-            .to_rgba8()
-            .to_vec();
-    
+    let image = image::load(
+        Cursor::new(&include_bytes!("../assets/icon.png")[..]),
+        image::ImageFormat::Png,
+    )
+    .unwrap()
+    .to_rgba8()
+    .to_vec();
     let icon = match glutin::window::Icon::from_rgba(image, 43, 40) {
         Ok(i) => i,
         Err(e) => match e {
-            glutin::window::BadIcon::ByteCountNotDivisibleBy4 { .. } => panic!("Failed to get a decent bytecount"),
-            glutin::window::BadIcon::DimensionsVsPixelCount { width, height, width_x_height, pixel_count } => panic!("({}, {}) {} = {}", width, height, width_x_height, pixel_count),
-            glutin::window::BadIcon::OsError(err) => panic!("{}", err)
-
-        }
+            glutin::window::BadIcon::ByteCountNotDivisibleBy4 { .. } => {
+                panic!("Failed to get a decent bytecount")
+            }
+            glutin::window::BadIcon::DimensionsVsPixelCount {
+                width,
+                height,
+                width_x_height,
+                pixel_count,
+            } => panic!(
+                "({}, {}) {} = {}",
+                width, height, width_x_height, pixel_count
+            ),
+            glutin::window::BadIcon::OsError(err) => panic!("{}", err),
+        },
     };
 
     let wb = glutin::window::WindowBuilder::new()
@@ -57,33 +66,63 @@ fn main() {
 
     #[derive(Copy, Clone)]
     struct Vertex {
-        position: [f32; 3],
-        normal: [f32; 3],
-        tex_coords: [f32; 2],
+        position: Vec3,
+        normal: Vec3,
+        tex_coords: Vec2,
     }
 
     implement_vertex!(Vertex, position, normal, tex_coords);
 
-    let shape = glium::vertex::VertexBuffer::new(&display, &[
-            Vertex { position: [-1.0,  1.0, 0.0], normal: [0.0, 0.0, -1.0], tex_coords: [0.0, 1.0] },
-            Vertex { position: [ 1.0,  1.0, 0.0], normal: [0.0, 0.0, -1.0], tex_coords: [1.0, 1.0] },
-            Vertex { position: [-1.0, -1.0, 0.0], normal: [0.0, 0.0, -1.0], tex_coords: [0.0, 0.0] },
-            Vertex { position: [ 1.0, -1.0, 0.0], normal: [0.0, 0.0, -1.0], tex_coords: [1.0, 0.0] },
-        ]).unwrap();
+    let normal = Vec3::new_with(0f32, 0f32, -1f32);
 
+    let shape = glium::vertex::VertexBuffer::new(
+        &display,
+        &[
+            Vertex {
+                position: Vec3::new_with(-1f32, 1f32, 0f32),
+                normal,
+                tex_coords: Vec2::new_with(0f32, 1f32),
+            },
+            Vertex {
+                position: Vec3::new_with(1f32, 1f32, 0f32),
+                normal,
+                tex_coords: Vec2::new_with(1f32, 1f32),
+            },
+            Vertex {
+                position: Vec3::new_with(-1f32, -1f32, 0f32),
+                normal,
+                tex_coords: Vec2::new_with(0f32, 0f32),
+            },
+            Vertex {
+                position: Vec3::new_with(1f32, -1f32, 0f32),
+                normal,
+                tex_coords: Vec2::new_with(1f32, 0f32),
+            },
+        ],
+    )
+    .unwrap();
 
-    let image = image::load(Cursor::new(&include_bytes!("../assets/diffuse.jpg")[..]),
-                            image::ImageFormat::Jpeg).unwrap().to_rgba8();
+    let image = image::load(
+        Cursor::new(&include_bytes!("../assets/diffuse.jpg")[..]),
+        image::ImageFormat::Jpeg,
+    )
+    .unwrap()
+    .to_rgba8();
     let image_dimensions = image.dimensions();
-    let image = glium::texture::RawImage2d::from_raw_rgba_reversed(&image.into_raw(), image_dimensions);
+    let image =
+        glium::texture::RawImage2d::from_raw_rgba_reversed(&image.into_raw(), image_dimensions);
     let diffuse_texture = glium::texture::SrgbTexture2d::new(&display, image).unwrap();
 
-    let image = image::load(Cursor::new(&include_bytes!("../assets/normal.png")[..]),
-                            image::ImageFormat::Png).unwrap().to_rgba8();
+    let image = image::load(
+        Cursor::new(&include_bytes!("../assets/normal.png")[..]),
+        image::ImageFormat::Png,
+    )
+    .unwrap()
+    .to_rgba8();
     let image_dimensions = image.dimensions();
-    let image = glium::texture::RawImage2d::from_raw_rgba_reversed(&image.into_raw(), image_dimensions);
+    let image =
+        glium::texture::RawImage2d::from_raw_rgba_reversed(&image.into_raw(), image_dimensions);
     let normal_map = glium::texture::Texture2d::new(&display, image).unwrap();
-
 
     let vertex_shader_src = r#"
         #version 150
@@ -145,11 +184,10 @@ fn main() {
         .with_vertex_shader(vertex_shader_src)
         .with_fragment_shader(fragment_shader_src)
         .build(&display);
-        
 
     event_loop.run(move |event, _, control_flow| {
-        let next_frame_time = std::time::Instant::now() +
-            std::time::Duration::from_nanos(16_666_667);
+        let next_frame_time =
+            std::time::Instant::now() + std::time::Duration::from_nanos(16_666_667);
         *control_flow = glutin::event_loop::ControlFlow::WaitUntil(next_frame_time);
 
         match event {
@@ -157,7 +195,7 @@ fn main() {
                 glutin::event::WindowEvent::CloseRequested => {
                     *control_flow = glutin::event_loop::ControlFlow::Exit;
                     return;
-                },
+                }
                 _ => return,
             },
             glutin::event::Event::NewEvents(cause) => match cause {
@@ -190,10 +228,10 @@ fn main() {
             let f = 1.0 / (fov / 2.0).tan();
 
             [
-                [f *   aspect_ratio   ,    0.0,              0.0              ,   0.0],
-                [         0.0         ,     f ,              0.0              ,   0.0],
-                [         0.0         ,    0.0,  (zfar+znear)/(zfar-znear)    ,   1.0],
-                [         0.0         ,    0.0, -(2.0*zfar*znear)/(zfar-znear),   0.0],
+                [f * aspect_ratio, 0.0, 0.0, 0.0],
+                [0.0, f, 0.0, 0.0],
+                [0.0, 0.0, (zfar + znear) / (zfar - znear), 1.0],
+                [0.0, 0.0, -(2.0 * zfar * znear) / (zfar - znear), 0.0],
             ]
         };
 
@@ -203,15 +241,21 @@ fn main() {
             depth: glium::Depth {
                 test: glium::draw_parameters::DepthTest::IfLess,
                 write: true,
-                .. Default::default()
+                ..Default::default()
             },
-            .. Default::default()
+            ..Default::default()
         };
 
-        target.draw(&shape, glium::index::NoIndices(glium::index::PrimitiveType::TriangleStrip), &program,
-                    &uniform! { model: model.to_arr(), view: view.to_arr(), perspective: perspective,
-                                u_light: light, diffuse_tex: &diffuse_texture, normal_tex: &normal_map },
-                    &params).unwrap();
+        target
+            .draw(
+                &shape,
+                glium::index::NoIndices(glium::index::PrimitiveType::TriangleStrip),
+                &program,
+                &uniform! { model: model, view: view, perspective: perspective,
+                u_light: light, diffuse_tex: &diffuse_texture, normal_tex: &normal_map },
+                &params,
+            )
+            .unwrap();
         target.finish().unwrap();
     });
 }

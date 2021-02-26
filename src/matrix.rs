@@ -1,5 +1,6 @@
 use crate::vector::Vec3;
 
+#[derive(Copy, Clone)]
 pub struct Matrix {
     pub m11: f32,
     pub m21: f32,
@@ -108,5 +109,11 @@ impl From<[f32; 16]> for Matrix {
             m34: arr[14],
             m44: arr[15],
         }
+    }
+}
+
+impl glium::uniforms::AsUniformValue for Matrix {
+    fn as_uniform_value(&self) -> glium::uniforms::UniformValue<'_> {
+       glium::uniforms::UniformValue::Mat4(self.to_arr())
     }
 }
