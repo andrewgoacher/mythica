@@ -8,6 +8,7 @@ mod matrix;
 mod shader;
 mod vector;
 
+use crate::matrix::ProjectionOptions;
 use crate::matrix::Matrix;
 use crate::shader::ShaderBuilder;
 use crate::vector::{Vec2, Vec3};
@@ -216,26 +217,14 @@ fn main() {
         let up = Vec3::up();
 
         let view = Matrix::view_matrix(&pos, &direction, &up);
+        let (width, height) = target.get_dimensions();
+        let perspective = Matrix::perspective_fov(
+            &ProjectionOptions::new(width, height)
+                .with_fov(matrix::PI / 3f32)
+                .with_near(0.1f32)
+                .with_far(1024f32));
 
-        let perspective = {
-            let (width, height) = target.get_dimensions();
-            let aspect_ratio = height as f32 / width as f32;
-
-            let fov: f32 = 3.141592 / 3.0;
-            let zfar = 1024.0;
-            let znear = 0.1;
-
-            let f = 1.0 / (fov / 2.0).tan();
-
-            [
-                [f * aspect_ratio, 0.0, 0.0, 0.0],
-                [0.0, f, 0.0, 0.0],
-                [0.0, 0.0, (zfar + znear) / (zfar - znear), 1.0],
-                [0.0, 0.0, -(2.0 * zfar * znear) / (zfar - znear), 0.0],
-            ]
-        };
-
-        let light = [1.4, 0.4, 0.7f32];
+        let light = Vec3::new_with(1.4f32, 0.4f32, 0.7f32);
 
         let params = glium::DrawParameters {
             depth: glium::Depth {
