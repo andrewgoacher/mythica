@@ -8,7 +8,8 @@ mod matrix;
 mod shader;
 mod vector;
 
-use crate::matrix::ProjectionOptions;
+use core::f32::consts::PI;
+use crate::matrix::projection::ProjectionOptions;
 use crate::matrix::Matrix;
 use crate::shader::ShaderBuilder;
 use crate::vector::{Vec2, Vec3};
@@ -220,7 +221,7 @@ fn main() {
         let (width, height) = target.get_dimensions();
         let perspective = Matrix::perspective_fov(
             &ProjectionOptions::new(width, height)
-                .with_fov(matrix::PI / 3f32)
+                .with_fov(PI / 3f32)
                 .with_near(0.1f32)
                 .with_far(1024f32));
 

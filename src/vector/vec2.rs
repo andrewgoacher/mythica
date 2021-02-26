@@ -53,15 +53,3 @@ impl Sub for Vec2 {
         }
     }
 }
-
-unsafe impl glium::vertex::Attribute for Vec2 {
-    fn get_type() -> glium::vertex::AttributeType {
-        glium::vertex::AttributeType::F32F32
-    }
-}
-
-impl glium::uniforms::AsUniformValue for Vec2 {
-    fn as_uniform_value(&self) -> glium::uniforms::UniformValue<'_> {
-       glium::uniforms::UniformValue::Vec2([self.x, self.y])
-    }
-}
