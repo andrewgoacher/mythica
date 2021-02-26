@@ -8,11 +8,11 @@ mod matrix;
 mod shader;
 mod vector;
 
-use core::f32::consts::PI;
 use crate::matrix::projection::ProjectionOptions;
 use crate::matrix::Matrix;
 use crate::shader::ShaderBuilder;
 use crate::vector::{Vec2, Vec3};
+use core::f32::consts::PI;
 
 use std::io::Cursor;
 
@@ -223,7 +223,8 @@ fn main() {
             &ProjectionOptions::new(width, height)
                 .with_fov(PI / 3f32)
                 .with_near(0.1f32)
-                .with_far(1024f32));
+                .with_far(1024f32),
+        );
 
         let light = Vec3::new_with(1.4f32, 0.4f32, 0.7f32);
 
