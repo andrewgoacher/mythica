@@ -1,5 +1,5 @@
-use crate::Vec3;
 use crate::Matrix;
+use crate::Vec3;
 
 impl Matrix {
     pub fn view_matrix(pos: &Vec3, direction: &Vec3, up: &Vec3) -> Matrix {

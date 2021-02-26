@@ -1,13 +1,13 @@
 pub struct ShaderBuilder {
     vertex: &'static str,
-    fragment: &'static str
+    fragment: &'static str,
 }
 
 impl ShaderBuilder {
     pub fn new() -> ShaderBuilder {
         Self {
             vertex: "",
-            fragment: ""
+            fragment: "",
         }
     }
 
@@ -25,13 +25,10 @@ impl ShaderBuilder {
         }
     }
 
-    pub fn build<T: ?Sized>(self, display: &T) -> glium::Program 
-    where T: glium::backend::Facade {
-        glium::Program::from_source(
-            display,
-            self.vertex,
-            self.fragment,
-            None).unwrap()
+    pub fn build<T: ?Sized>(self, display: &T) -> glium::Program
+    where
+        T: glium::backend::Facade,
+    {
+        glium::Program::from_source(display, self.vertex, self.fragment, None).unwrap()
     }
 }
-

@@ -1,7 +1,6 @@
+mod glium;
 pub mod projection;
 pub mod view;
-mod glium;
-
 
 #[derive(Copy, Clone, PartialEq, PartialOrd)]
 pub struct Matrix {

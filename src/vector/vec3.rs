@@ -1,7 +1,5 @@
-
 use core::ops::Add;
 use core::ops::Sub;
-
 
 #[derive(Copy, Clone, PartialEq, PartialOrd)]
 pub struct Vec3 {

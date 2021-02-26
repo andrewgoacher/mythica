@@ -1,5 +1,5 @@
-use crate::Vec3;
 use crate::Vec2;
+use crate::Vec3;
 
 unsafe impl glium::vertex::Attribute for Vec2 {
     fn get_type() -> glium::vertex::AttributeType {
@@ -9,7 +9,7 @@ unsafe impl glium::vertex::Attribute for Vec2 {
 
 impl glium::uniforms::AsUniformValue for Vec2 {
     fn as_uniform_value(&self) -> glium::uniforms::UniformValue<'_> {
-       glium::uniforms::UniformValue::Vec2([self.x, self.y])
+        glium::uniforms::UniformValue::Vec2([self.x, self.y])
     }
 }
 
@@ -21,6 +21,6 @@ unsafe impl glium::vertex::Attribute for Vec3 {
 
 impl glium::uniforms::AsUniformValue for Vec3 {
     fn as_uniform_value(&self) -> glium::uniforms::UniformValue<'_> {
-       glium::uniforms::UniformValue::Vec3([self.x, self.y, self.z])
+        glium::uniforms::UniformValue::Vec3([self.x, self.y, self.z])
     }
 }
