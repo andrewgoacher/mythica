@@ -3,16 +3,13 @@ extern crate glium;
 
 extern crate image;
 
-mod color;
-mod matrix;
-mod shader;
-mod vector;
+mod core;
 
-use crate::matrix::projection::ProjectionOptions;
-use crate::matrix::Matrix;
-use crate::shader::ShaderBuilder;
-use crate::vector::{Vec2, Vec3};
-use core::f32::consts::PI;
+use crate::core::matrix::projection::ProjectionOptions;
+use crate::core::matrix::Matrix;
+use crate::core::shader::ShaderBuilder;
+use crate::core::vector::{Vec2, Vec3};
+use ::core::f32::consts::PI;
 
 use std::io::Cursor;
 
@@ -209,7 +206,7 @@ fn main() {
         }
 
         let mut target = display.draw();
-        target.clear_color_and_depth(color::CORNFLOWER_BLUE, 1.0);
+        target.clear_color_and_depth(core::color::CORNFLOWER_BLUE, 1.0);
 
         let model = Matrix::identity();
 
