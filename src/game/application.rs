@@ -1,3 +1,4 @@
+use crate::core::resource::Resource;
 use crate::game::application_builder::ApplicationOptions;
 use crate::Cursor;
 use crate::Matrix;
@@ -51,22 +52,14 @@ impl Application {
 
         let shape = create_shape(&display);
 
-        let image = image::load(
-            Cursor::new(&include_bytes!("../../assets/diffuse.jpg")[..]),
-            image::ImageFormat::Jpeg,
-        )
-        .unwrap()
-        .to_rgba8();
+        let resources = Resource::new("./assets");
+
+        let image = resources.load_image_data("diffuse.jpg").unwrap();
         let image_dimensions = image.dimensions();
         let image =
             glium::texture::RawImage2d::from_raw_rgba_reversed(&image.into_raw(), image_dimensions);
         let diffuse_texture = glium::texture::SrgbTexture2d::new(&display, image).unwrap();
-        let image = image::load(
-            Cursor::new(&include_bytes!("../../assets/normal.png")[..]),
-            image::ImageFormat::Png,
-        )
-        .unwrap()
-        .to_rgba8();
+        let image = resources.load_image_data("normal.png").unwrap();
         let image_dimensions = image.dimensions();
         let image =
             glium::texture::RawImage2d::from_raw_rgba_reversed(&image.into_raw(), image_dimensions);

@@ -2,7 +2,7 @@ pub struct ApplicationOptions {
     pub icon: Option<glutin::window::Icon>,
     pub title: Option<&'static str>,
     pub width: u32,
-    pub height: u32,
+    pub height: u32
 }
 
 impl ApplicationOptions {
