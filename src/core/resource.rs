@@ -1,16 +1,13 @@
-use image::RgbaImage;
-use image::ImageFormat;
 use image::io::Reader as ImageReader;
+use image::RgbaImage;
 
 pub struct Resource<'a> {
-    base: &'a str
+    base: &'a str,
 }
 
-impl <'a> Resource<'a> {
+impl<'a> Resource<'a> {
     pub fn new(base: &'a str) -> Self {
-        Self {
-            base
-        }
+        Self { base }
     }
 
     pub fn path(&self, path: &str) -> String {
@@ -21,16 +18,14 @@ impl <'a> Resource<'a> {
         let path = self.path(path);
 
         match ImageReader::open(path) {
-            Ok(img) => {
-                match img.decode() {
-                    Err(e) => {
-                        println!("{}", e);
-                        None
-                    },
-                    Ok(img) => {
-                        let rgba8 =  img.to_rgba8();
-                        Some(rgba8)
-                    }
+            Ok(img) => match img.decode() {
+                Err(e) => {
+                    println!("{}", e);
+                    None
+                }
+                Ok(img) => {
+                    let rgba8 = img.to_rgba8();
+                    Some(rgba8)
                 }
             },
             Err(e) => {

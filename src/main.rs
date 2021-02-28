@@ -10,8 +10,8 @@ use crate::core::matrix::projection::ProjectionOptions;
 use crate::core::matrix::Matrix;
 use crate::core::shader::ShaderBuilder;
 use crate::core::vector::{Vec2, Vec3};
-use crate::game::application::Application;
-use crate::game::application_builder::ApplicationOptions;
+use crate::core::application::Application;
+use crate::core::application_builder::ApplicationOptions;
 
 use std::io::Cursor;
 
@@ -40,6 +40,4 @@ fn main() {
 
     let mut application = Application::new();
     application.run(options);
-
-    ()
 }
