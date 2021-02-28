@@ -5,7 +5,7 @@ pub struct ShaderBuilder {
     fragment: Option<String>,
 }
 
-impl  ShaderBuilder {
+impl ShaderBuilder {
     pub fn new() -> Self {
         Self {
             vertex: None,
@@ -14,8 +14,12 @@ impl  ShaderBuilder {
     }
 
     pub fn from_file(resource: &Resource, file: &str) -> Self {
-        let vertex_source = resource.read_string(&[file, ".vertex"].join("")[..]).expect("Vertex shader missing");
-        let fragment_source = resource.read_string(&[file, ".fragment"].join("")[..]).expect("Fragment shader missing");
+        let vertex_source = resource
+            .read_string(&[file, ".vertex"].join("")[..])
+            .expect("Vertex shader missing");
+        let fragment_source = resource
+            .read_string(&[file, ".fragment"].join("")[..])
+            .expect("Fragment shader missing");
 
         Self::new()
             .with_vertex_shader(&vertex_source[..])

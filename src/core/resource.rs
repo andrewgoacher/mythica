@@ -17,7 +17,7 @@ impl<'a> Resource<'a> {
     pub fn read_string(&self, path: &str) -> Option<String> {
         match std::fs::read_to_string(self.path(path)) {
             Err(_) => None,
-            Ok(s) => Some(s)
+            Ok(s) => Some(s),
         }
     }
 

@@ -1,5 +1,5 @@
-use crate::core::resource::Resource;
 use crate::core::application::application_builder::ApplicationOptions;
+use crate::core::resource::Resource;
 use crate::Matrix;
 use crate::ProjectionOptions;
 use crate::ShaderBuilder;
@@ -17,7 +17,9 @@ impl Application {
         event_loop: &glium::glutin::event_loop::EventLoop<()>,
         options: Option<ApplicationOptions>,
     ) -> glium::Display {
-        let options = options.or_else(||Some(ApplicationOptions::default())).unwrap();
+        let options = options
+            .or_else(|| Some(ApplicationOptions::default()))
+            .unwrap();
         let title = options.title.or(Some("Mythica Engine")).unwrap();
         let icon = options.icon;
 
@@ -68,9 +70,7 @@ impl Application {
             glium::texture::RawImage2d::from_raw_rgba_reversed(&image.into_raw(), image_dimensions);
         let normal_map = glium::texture::Texture2d::new(&display, image).unwrap();
 
-        let program = ShaderBuilder
-            ::from_file(&resources, "shaders/shader")
-            .build(&display);
+        let program = ShaderBuilder::from_file(&resources, "shaders/shader").build(&display);
 
         event_loop.run(move |event, _, control_flow| {
             let next_frame_time =

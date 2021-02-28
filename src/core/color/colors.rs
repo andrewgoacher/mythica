@@ -1,5 +1,3 @@
-
-
 use super::Color;
 
 #[allow(dead_code)]
