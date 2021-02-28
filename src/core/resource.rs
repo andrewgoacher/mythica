@@ -14,6 +14,13 @@ impl<'a> Resource<'a> {
         [self.base, path].join("/")
     }
 
+    pub fn read_string(&self, path: &str) -> Option<String> {
+        match std::fs::read_to_string(self.path(path)) {
+            Err(_) => None,
+            Ok(s) => Some(s)
+        }
+    }
+
     pub fn load_image_data(&self, path: &str) -> Option<RgbaImage> {
         let path = self.path(path);
 
