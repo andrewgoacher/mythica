@@ -1,3 +1,4 @@
+use crate::game::state::Context;
 use crate::core::application::application_builder::ApplicationOptions;
 use crate::core::resource::Resource;
 use crate::Matrix;
@@ -64,18 +65,23 @@ impl Application {
 
         let resources = Resource::new("./assets");
 
-        let image = resources.load_image_data("diffuse.jpg").unwrap();
-        let image_dimensions = image.dimensions();
-        let image =
-            glium::texture::RawImage2d::from_raw_rgba_reversed(&image.into_raw(), image_dimensions);
-        let diffuse_texture = glium::texture::SrgbTexture2d::new(&display, image).unwrap();
-        let image = resources.load_image_data("normal.png").unwrap();
-        let image_dimensions = image.dimensions();
-        let image =
-            glium::texture::RawImage2d::from_raw_rgba_reversed(&image.into_raw(), image_dimensions);
-        let normal_map = glium::texture::Texture2d::new(&display, image).unwrap();
+        let context = Context {
+            display,
+            resources
+        };
 
-        let program = ShaderBuilder::from_file(&resources, "shaders/shader").build(&display);
+        let image = context.resources.load_image_data("diffuse.jpg").unwrap();
+        let image_dimensions = image.dimensions();
+        let image =
+            glium::texture::RawImage2d::from_raw_rgba_reversed(&image.into_raw(), image_dimensions);
+        let diffuse_texture = glium::texture::SrgbTexture2d::new(&context.display, image).unwrap();
+        let image = context.resources.load_image_data("normal.png").unwrap();
+        let image_dimensions = image.dimensions();
+        let image =
+            glium::texture::RawImage2d::from_raw_rgba_reversed(&image.into_raw(), image_dimensions);
+        let normal_map = glium::texture::Texture2d::new(&context.display, image).unwrap();
+
+        let program = ShaderBuilder::from_file(&context.resources, "shaders/shader").build(&context.display);
 
         event_loop.run(move |event, _, control_flow| {
             let next_frame_time =
@@ -98,7 +104,7 @@ impl Application {
                 _ => return,
             }
 
-            let mut target = display.draw();
+            let mut target = context.display.draw();
             target.clear_color_and_depth(color::convert(&color::colors::CORNFLOWER_BLUE), 1.0);
 
             let model = Matrix::identity();
