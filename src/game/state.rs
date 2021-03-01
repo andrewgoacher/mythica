@@ -1,10 +1,10 @@
-use glium::Frame;
 use crate::core::resource::Resource;
+use glium::Frame;
 
 pub struct Context<'a> {
     pub display: glium::Display,
     pub resources: Resource<'a>,
-    pub dimensions: (u32, u32)
+    pub dimensions: (u32, u32),
 }
 
 pub trait GameState<'a> {

@@ -1,13 +1,13 @@
-use std::f32::consts::PI;
+use crate::Matrix;
 use crate::ProjectionOptions;
 use crate::Vec3;
-use crate::Matrix;
+use std::f32::consts::PI;
 
 pub struct Camera {
     pub view: Matrix,
     pub projection: Matrix,
     pub position: Vec3,
-    pub direction: Vec3
+    pub direction: Vec3,
 }
 
 impl Camera {
@@ -16,7 +16,7 @@ impl Camera {
             view: Matrix::identity(),
             projection: Matrix::identity(),
             position: Vec3::zero(),
-            direction: Vec3::zero()
+            direction: Vec3::zero(),
         }
     }
 
@@ -50,14 +50,13 @@ impl Camera {
     }
 
     pub fn with_projection(self, width: u32, height: u32) -> Self {
-        let projection = Matrix::perspective_fov(&ProjectionOptions::new(width, height)
-            .with_fov(PI/3f32)
-            .with_near(0.1f32)
-            .with_far(1024f32));
+        let projection = Matrix::perspective_fov(
+            &ProjectionOptions::new(width, height)
+                .with_fov(PI / 3f32)
+                .with_near(0.1f32)
+                .with_far(1024f32),
+        );
 
-        Self {
-            projection, 
-            ..self
-        }
-    } 
+        Self { projection, ..self }
+    }
 }

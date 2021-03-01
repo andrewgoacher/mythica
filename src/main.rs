@@ -6,13 +6,13 @@ extern crate image;
 mod core;
 mod game;
 
-use crate::game::billboard::Billboard;
 use crate::core::application::application_builder::ApplicationOptions;
 use crate::core::application::Application;
 use crate::core::matrix::projection::ProjectionOptions;
 use crate::core::matrix::Matrix;
 use crate::core::shader::ShaderBuilder;
 use crate::core::vector::{Vec2, Vec3};
+use crate::game::billboard::Billboard;
 use crate::game::camera::Camera;
 use crate::game::state::Context;
 use crate::game::state::GameState;
@@ -84,10 +84,6 @@ impl<'a> GameState<'a> for SimpleState {
     }
     fn on_update(&mut self, _: &game::state::Context<'a>) {}
     fn on_draw(&mut self, frame: &mut Frame, _: &game::state::Context<'a>) {
-
         self.billboard.as_ref().unwrap().draw(frame, &self.camera)
-    
     }
 }
-
-
