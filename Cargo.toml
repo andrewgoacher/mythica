@@ -1,24 +1,7 @@
-[package]
-name = "mythica"
-version = "0.1.0"
-authors = ["Andrew Goacher <goach@hey.com>"]
-edition = "2018"
+[workspace]
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
-[dependencies]
-glium="*"
-image = "0.23"
-
-[features]
-default = ["glutin"]
-unstable = [] # used for benchmarks
-test_headless = []  # used for testing headless display
-
-[dependencies.glutin]
-version = "0.26"
-features = []
-optional = true
-
-[build-dependencies]
-fs_extra = "1.2.0"
+members = [
+    "mythica",
+    "mythica_math",
+    "mythica_engine"
+]
