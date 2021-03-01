@@ -2,7 +2,7 @@ use crate::Matrix;
 use crate::Vec3;
 
 impl Matrix {
-    pub fn view_matrix(pos: &Vec3, direction: &Vec3, up: &Vec3) -> Matrix {
+    pub fn view_matrix(pos: Vec3, direction: Vec3, up: Vec3) -> Matrix {
         let dir_norm = direction.normal();
 
         let s = up.cross(&dir_norm);
