@@ -1,10 +1,11 @@
-use crate::engine::core::application::application_builder::ApplicationOptions;
 use crate::engine::core::resource::Resource;
 use crate::engine::game::state::Context;
 use crate::engine::game::state::GameState;
 use crate::engine::core::color;
 
 pub mod application_builder;
+
+pub use application_builder::ApplicationOptions;
 
 pub struct Application {
     options: ApplicationOptions,
