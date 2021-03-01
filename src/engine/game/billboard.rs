@@ -1,4 +1,4 @@
-use crate::core::resource::Resource;
+use crate::engine::core::resource::Resource;
 use crate::Camera;
 use crate::Matrix;
 use crate::ShaderBuilder;

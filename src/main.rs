@@ -3,25 +3,18 @@ extern crate glium;
 
 extern crate image;
 
-mod core;
-mod game;
+mod engine;
 
-use crate::core::application::application_builder::ApplicationOptions;
-use crate::core::application::Application;
-use crate::core::matrix::projection::ProjectionOptions;
-use crate::core::matrix::Matrix;
-use crate::core::shader::ShaderBuilder;
-use crate::core::vector::{Vec2, Vec3};
-use crate::game::billboard::Billboard;
-use crate::game::camera::Camera;
-use crate::game::state::Context;
-use crate::game::state::GameState;
-use glium::texture::SrgbTexture2d;
+use crate::engine::core::application::application_builder::ApplicationOptions;
+use crate::engine::core::application::Application;
+use crate::engine::core::matrix::projection::ProjectionOptions;
+use crate::engine::core::matrix::Matrix;
+use crate::engine::core::shader::ShaderBuilder;
+use crate::engine::core::vector::{Vec2, Vec3};
+use crate::engine::game::billboard::Billboard;
+use crate::engine::game::camera::Camera;
+use crate::engine::game::state::GameState;
 use glium::Frame;
-use glium::Program;
-use glium::Texture2d;
-use glium::VertexBuffer;
-use std::f32::consts::PI;
 
 use std::io::Cursor;
 
@@ -68,7 +61,7 @@ impl SimpleState {
 }
 
 impl<'a> GameState<'a> for SimpleState {
-    fn on_init(self, ctx: &game::state::Context<'a>) -> Self {
+    fn on_init(self, ctx: &engine::game::state::Context<'a>) -> Self {
         let pos = Vec3::new_with(0.5f32, 0.2f32, -3f32);
         let direction = Vec3::new_with(-0.5f32, -0.2f32, 3f32);
         let (w, h) = ctx.dimensions;
@@ -82,8 +75,8 @@ impl<'a> GameState<'a> for SimpleState {
             ..self
         }
     }
-    fn on_update(&mut self, _: &game::state::Context<'a>) {}
-    fn on_draw(&mut self, frame: &mut Frame, _: &game::state::Context<'a>) {
+    fn on_update(&mut self, _: &engine::game::state::Context<'a>) {}
+    fn on_draw(&mut self, frame: &mut Frame, _: &engine::game::state::Context<'a>) {
         self.billboard.as_ref().unwrap().draw(frame, &self.camera)
     }
 }

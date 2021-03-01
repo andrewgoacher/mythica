@@ -1,14 +1,8 @@
-use crate::core::application::application_builder::ApplicationOptions;
-use crate::core::resource::Resource;
-use crate::game::state::Context;
-use crate::game::state::GameState;
-use crate::Matrix;
-use crate::ProjectionOptions;
-use crate::ShaderBuilder;
-use crate::Vec2;
-use crate::Vec3;
-
-use crate::core::color;
+use crate::engine::core::application::application_builder::ApplicationOptions;
+use crate::engine::core::resource::Resource;
+use crate::engine::game::state::Context;
+use crate::engine::game::state::GameState;
+use crate::engine::core::color;
 
 pub mod application_builder;
 
