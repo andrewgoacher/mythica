@@ -38,6 +38,6 @@ fn main() {
             .with_icon(load_icon().unwrap()),
     );
 
-    let mut application = Application::new();
-    application.run(options);
+    Application::new(options)
+        .run();
 }

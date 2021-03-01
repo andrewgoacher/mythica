@@ -10,23 +10,23 @@ use crate::core::color;
 
 pub mod application_builder;
 
-pub struct Application {}
+pub struct Application {
+    options: ApplicationOptions
+}
 
 impl Application {
     fn create_display(
-        event_loop: &glium::glutin::event_loop::EventLoop<()>,
-        options: Option<ApplicationOptions>,
+        &self,
+        event_loop: &glium::glutin::event_loop::EventLoop<()>
     ) -> glium::Display {
-        let options = options
-            .or_else(|| Some(ApplicationOptions::default()))
-            .unwrap();
-        let title = options.title.or(Some("Mythica Engine")).unwrap();
-        let icon = options.icon;
+
+        let title = self.options.title.or(Some("Mythica Engine")).unwrap();
+        let icon = self.options.icon.clone();
 
         let wb = glutin::window::WindowBuilder::new()
             .with_inner_size(glium::glutin::dpi::LogicalSize::new(
-                options.width,
-                options.height,
+                self.options.width,
+                self.options.height,
             ))
             .with_resizable(true)
             .with_title(title)
@@ -42,18 +42,23 @@ impl Application {
         glium::Display::new(wb, cb, &event_loop).unwrap()
     }
 
-    pub fn new() -> Self {
-        Self {}
+    pub fn new(options: Option<ApplicationOptions>) -> Self {
+        let options = options
+            .or_else(|| Some(ApplicationOptions::default()))
+            .unwrap();
+        Self {
+            options
+        }
     }
 
-    pub fn run(&mut self, options: Option<ApplicationOptions>) {
+    pub fn run(&self) {
         #[allow(unused_imports)]
         use glium::{glutin, Surface};
 
         use ::core::f32::consts::PI;
 
         let event_loop = glutin::event_loop::EventLoop::new();
-        let display = Self::create_display(&event_loop, options);
+        let display = self.create_display(&event_loop);
 
         let shape = create_shape(&display);
 
