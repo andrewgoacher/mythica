@@ -1,4 +1,3 @@
-pub mod application;
 pub mod color;
 pub mod resource;
 pub mod shader;

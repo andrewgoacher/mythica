@@ -3,8 +3,8 @@
 extern crate image;
 mod game;
 
-use mythica_engine::core::application::Application;
-use mythica_engine::core::application::ApplicationOptions;
+use mythica_engine::application::Application;
+use mythica_engine::application::ApplicationOptions;
 use crate::game::SimpleState;
 use std::io::Cursor;
 
