@@ -1,7 +1,7 @@
 use crate::game::Context;
 use crate::core::Resource;
 use crate::game::GameState;
-use crate::core::color;
+use crate::graphics::color;
 
 pub struct Application {
     options: ApplicationOptions,

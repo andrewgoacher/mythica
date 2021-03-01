@@ -2,7 +2,7 @@ use mythica_math::vector::Vec3;
 use mythica_engine::game::Context;
 use mythica_engine::game::GameState;
 use mythica_engine::game::Camera;
-use mythica_engine::game::Billboard;
+use mythica_engine::graphics::billboard::Billboard;
 use glium::Frame;
 
 pub struct SimpleState {

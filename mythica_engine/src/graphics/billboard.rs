@@ -1,6 +1,6 @@
+use crate::graphics::shader::ShaderBuilder;
 use mythica_math::vector::Vec2;
 use crate::game::Camera;
-use crate::core::ShaderBuilder;
 use crate::core::Resource;
 use mythica_math::matrix::Matrix;
 use mythica_math::vector::Vec3;
