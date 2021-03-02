@@ -1,7 +1,7 @@
 use crate::graphics::shader::ShaderBuilder;
 use mythica_math::vector::Vec2;
 use crate::game::Camera;
-use crate::core::Resource;
+use crate::Resource;
 use mythica_math::matrix::Matrix;
 use mythica_math::vector::Vec3;
 use glium::texture::SrgbTexture2d;

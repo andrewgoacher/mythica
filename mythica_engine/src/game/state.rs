@@ -1,5 +1,5 @@
 
-use crate::core::Resource;
+use crate::Resource;
 use glium::Frame;
 
 pub struct Context<'a> {

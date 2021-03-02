@@ -1,5 +1,5 @@
 use crate::game::Context;
-use crate::core::Resource;
+use crate::Resource;
 use crate::game::GameState;
 use crate::graphics::color;
 

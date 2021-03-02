@@ -1,4 +1,4 @@
-use crate::core::Resource;
+use crate::Resource;
 
 pub struct ShaderBuilder {
     vertex: Option<String>,
